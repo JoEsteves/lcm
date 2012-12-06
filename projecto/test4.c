@@ -24,9 +24,9 @@ int test_scan() {
 	return 0;
 
 }
-int scan_kb() {
+int scan_kb(unsigned int *xi, unsigned int *yi, unsigned int *xf, unsigned int *yf, unsigned long color) {
 
-	int a=100,b=100,c=200,d=200;
+
 	unsigned long irq_set = keyboard_subscribe();
 	printf("Kb scan started:\n");
 	while (scan_code != 0x81) {
@@ -34,8 +34,21 @@ int scan_kb() {
 		if (scan_code & 0x80) {
 			if (scan_code == 0x91)
 			{
-				vg_move_square_up(a,&b,c,&d, 0x04, 2);
+				vg_move_square_up(xi,yi,xf,yf, color, 2);
 			}
+			else if (scan_code == 0x9F)
+			{
+				vg_move_square_down(xi,yi,xf,yf, color, 2);
+			}
+			else if (scan_code == 0x9E)
+			{
+				vg_move_square_left(xi,yi,xf,yf, color, 2);
+			}
+			else if (scan_code == 0xA0)
+			{
+				vg_move_square_right(xi,yi,xf,yf, color, 2);
+			}
+
 		} else {
 			printf("Makecode: 0x%X\n", scan_code);
 		}

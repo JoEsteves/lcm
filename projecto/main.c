@@ -14,11 +14,12 @@
 
 #include "vbe.h"
 #include "video_gr.h"
+#include "test4.h"
 
 #define WAIT_TIME_S 5
 /* Return to text mode */
 
-int vg_draw_square(unsigned long xi, unsigned long yi, unsigned long xf, unsigned long yf, unsigned long color)
+int vg_draw_square(unsigned int xi, unsigned int yi, unsigned int xf, unsigned int yf, unsigned int color)
 {
 	vg_draw_line(xi,yi, xf, yi, color);
 	vg_draw_line(xi,yi, xi, yf, color);
@@ -41,7 +42,7 @@ int vg_draw_square(unsigned long xi, unsigned long yi, unsigned long xf, unsigne
 	}
 }
 
-int vg_move_square_down_right(unsigned long xi, unsigned long yi, unsigned long xf, unsigned long yf, unsigned long color, unsigned int num_movimentos)
+int vg_move_square_down_right(unsigned int xi, unsigned int yi, unsigned int xf, unsigned int yf, unsigned int color, unsigned int num_movimentos)
 {
 	int i;
 	for (i = 0; i < num_movimentos; i++)
@@ -58,20 +59,79 @@ int vg_move_square_down_right(unsigned long xi, unsigned long yi, unsigned long 
 	}
 }
 
-int vg_move_square_up(unsigned long xi, unsigned long *yi, unsigned long xf, unsigned long *yf, unsigned long color, unsigned int num_movimentos)
+int vg_move_square_up(unsigned int *xi, unsigned int *yi, unsigned int *xf, unsigned int *yf, unsigned long color, unsigned int num_movimentos)
 {
 	int i;
+	vg_draw_square((*xi), (*yi), (*xf), (*yf), color);
+
 	for (i = 0; i < num_movimentos; i++)
 	{
-		if ((xi-10) >= 0 && (xf-10) >= 0 && (*yi-10) >= 0 && (*yf-10) >= 0)
+		if ((*xi-10) > 0 && (*xf-10) > 0 && (*yi-10) > 0 && (*yf-10) > 0)
 		{
-			vg_draw_square(xi, (*yi), xf, (*yf), color);
-
-			sleep(1);
-			vg_draw_square(xi, (*yi), xf, (*yf), vg_get_pixel(0,0));
-
+			vg_draw_square(*xi, *yi, *xf, *yf, vg_get_pixel(0,0));
 			(*yi)-=10;
 			(*yf)-=10;
+			vg_draw_square(*xi, *yi, *xf, *yf, color);
+
+		}
+
+	}
+}
+
+int vg_move_square_down(unsigned int *xi, unsigned int *yi, unsigned int *xf, unsigned int *yf, unsigned long color, unsigned int num_movimentos)
+{
+	int i;
+	vg_draw_square((*xi), (*yi), (*xf), (*yf), color);
+
+	for (i = 0; i < num_movimentos; i++)
+	{
+		if ((*xi-10) > 0 && (*xf-10) > 0 && (*yi-10) > 0 && (*yf-10) > 0)
+		{
+			vg_draw_square(*xi, *yi, *xf, *yf, vg_get_pixel(0,0));
+			(*yi)+=10;
+			(*yf)+=10;
+			vg_draw_square(*xi, *yi, *xf, *yf, color);
+
+		}
+		else
+			break;
+	}
+}
+
+int vg_move_square_left(unsigned int *xi, unsigned int *yi, unsigned int *xf, unsigned int *yf, unsigned long color, unsigned int num_movimentos)
+{
+	int i;
+	vg_draw_square((*xi), (*yi), (*xf), (*yf), color);
+
+	for (i = 0; i < num_movimentos; i++)
+	{
+		if ((*xi-10) > 0 && (*xf-10) > 0)
+		{
+			vg_draw_square(*xi, *yi, *xf, *yf, vg_get_pixel(0,0));
+			(*xi)-=10;
+			(*xf)-=10;
+			vg_draw_square(*xi, *yi, *xf, *yf, color);
+
+		}
+		else
+			break;
+	}
+}
+
+int vg_move_square_right(unsigned int *xi, unsigned int *yi, unsigned int *xf, unsigned int *yf, unsigned long color, unsigned int num_movimentos)
+{
+	int i;
+	vg_draw_square((*xi), (*yi), (*xf), (*yf), color);
+
+	for (i = 0; i < num_movimentos; i++)
+	{
+		if ((*xi-10) > 0 && (*xf-10) > 0 && (*yi-10) > 0 && (*yf-10) > 0)
+		{
+			vg_draw_square(*xi, *yi, *xf, *yf, vg_get_pixel(0,0));
+			(*xi)+=10;
+			(*xf)+=10;
+			vg_draw_square(*xi, *yi, *xf, *yf, color);
+
 		}
 		else
 			break;
@@ -86,11 +146,14 @@ int main()
 	vg_init(0x105);
 	vg_fill(0x16);
 
-	//vg_draw_square(0,0,400,100, 0x14);
 
-	scan_kb();
+	//quadrados ftw
+	int a=100,b=100,c=200,d=200;
 
-	//test_scan();
+	vg_draw_square(100,100,200,200, 0x14);
+
+	scan_kb(&a,&b,&c,&d, 0x14);
+
 	sleep(5);
 	/*  for WAIT_TIME_S (5) seconds */
 	vg_exit();

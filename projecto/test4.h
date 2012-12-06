@@ -36,6 +36,7 @@ int test_scan();
 
 int test_leds(unsigned short n, unsigned short *leds);
 
+int scan_kb(unsigned int *xi, unsigned int *yi, unsigned int *xf, unsigned int *yf, unsigned long color);
 
 int kbc_unsubscribe_int();
 
